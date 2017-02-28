@@ -1,0 +1,116 @@
+\documentclass[12pt]{article}
+
+\usepackage{xeCJK}
+\usepackage{sectsty}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\DeclareGraphicsExtensions{.png,.pdf}
+
+\setCJKmainfont{AozoraMinchoRegular.ttf}
+
+\title{離散構造}
+\date{}
+
+\sectionfont{\fontsize{12}{15}\selectfont}
+
+\newcommand\floor[1]{\lfloor#1\rfloor}
+
+\newcommand{\problem}{%
+  \refstepcounter{section}%
+  \section*{問 \thesection}}
+
+\numberwithin{equation}{section}
+ 
+\begin{document}
+
+\maketitle
+ 
+\problem\label{Chapter 3}
+
+集合 \( V = \{ x \mid x \in \mathbb{N}, 0 \leq x \leq 14 \} \) とし, \(P(x) = x\) mod 3 + 5 \times $\floor{\frac{x}{5}}$と定める. \\
+次に \( V \) 上の2項関係 \( R, S \) をそれぞれ以下のように定める.
+
+\[ R = \{ \langle x, y \rangle \mid y = P(x) + 2 \} \]
+\[ S = \{ \langle x, y \rangle \mid y = P(x) + 3 \wedge x \leq 11 \vee y = 0 \} \]
+
+\begin{flushleft}
+(1-a) 頂点集合を \( V \), 辺集合を $R \cup S$ とする有向グラフ \( G \) を図示せよ. \\
+(1-b) 有向グラフ \( G \) の頂点と辺の数をそれぞれ答えよ. \\
+(1-c) 有向グラフ \( G \) において, 最長の単純道を一つ挙げ, その長さを答えよ.
+(1-d) 合成関係 $S \circ S$ が同値関係であるか否かを答えよ.
+\end{flushleft}
+
+\problem\label{Chapter 4}
+
+自然数の集合を \( \mathbb{N} \) とし, 集合 \( D \) を \( \{ x \in \mathbb{N} \mid 0 \leq x \leq 9 \} \) と定義する. また, 集合 \( D \) 上のリストの集合 \( List_D \) を以下のように帰納的に定義する.
+
+\begin{itemize}
+    \item Base Case: \( \langle \rangle \in List_D \)
+    \item Induction Step; \( L \in List_D \wedge x \in D \Rightarrow cons(x, L) \in List_D \)
+\end{itemize}
+
+\begin{flushleft}
+(2-a) 集合 \( List_D \) の部分集合 \( D = \{ \langle x_1,...,x_n \rangle \in List_D \mid n \geq 0, \forall x(x mod 3 = 0 \vee x mod 5 = 0) \} \) を帰納的に定義せよ. \\
+
+\newpage
+
+(2-b) 関数 \( calc = List_D \to \mathbb{N} \) と \( length = List_D \to \mathbb{N} \) を以下のように帰納的に定義する.
+
+\[
+    calc(L, l) = \begin{cases}
+        0 & (L = nil) \\
+        calc(L', l - 1) + n \cdot 2^{l-1} & (L = cons(n, L') \wedge l > 0)
+    \end{cases}
+\]
+
+\[
+    length(L) = \begin{cases}
+        0 & (L = nil) \\
+        1 + length(L') & (L = cons(n, L'))
+    \end{cases}
+\]
+
+\( A = \langle 1, 0, 1, 1 \rangle \in S \) としたとき, calc(A, length(A)) を calc, length の定義に従って計算せよ.\\
+
+\vspace{5mm}
+
+(2-c) \( \Sigma = \{ T, F \} \) を文字集合とし、その部分集合を \( E \) を以下のように定義する.
+
+\begin{itemize}
+    \item Base Case: \( \Lambda \in E \)
+    \item Induction Step: \( e \in E \Rightarrow Te \in E \)
+    \item Induction Step: \( e \in E \Rightarrow Fe \in E \)
+\end{itemize}
+
+また, \( List_D \) の要素を \( E \) の要素に変換する関数 \( comp:List_D \to E \) を以下のように定義する.
+
+\[
+    comp(L_1, L_2) = \begin{cases}
+        \Lambda & (L_1 = nil \vee L_2 = nil) \\
+        Fcomp(L_1', L_2') & (cons(n_1, L_1') \wedge cons(n_2, L_2') \wedge (n_1 \neq n_2 \vee n_1 = 0 \vee n_2 = 0)) \\
+        Tcomp(L_1', L_2') & (cons(n_1, L_1') \wedge cons(n_2, L_2') \wedge n_1 = n_2 \wedge n_1 = 1 \wedge n_2 = 1)
+    \end{cases}
+\]
+
+このとき, \( comp(\langle 0, 1, 0, 0 \rangle, \langle 1, 1, 0, 0 \rangle) \) を \( comp \) の定義に従って計算せよ.
+
+\vspace{5mm}
+
+(2-d) \( E \) の要素を \( List_D \) の要素に変換する関数 \( serialize: E \to List_D \) を以下のように定義する.
+
+\[
+    serialize(A) = \begin{cases}
+        \langle \rangle & (A = \Lambda) \\
+        cons(0, serialize(A')) & (A' = sA \wedge s = F) \\
+        cons(1, serialize(A')) & (A' = sA \wedge s = T)
+    \end{cases}
+\]
+
+このとき, \( List_D \) の任意の要素 \( L_1, L_2 \) について, \( L_1 \) と \( L_2 \) の各要素が全て同じとき, \( l = length(L_1) \) とし,  \( calc(L_1, l) = calc(serialize(comp(L_1, L_2)), l) \) が成り立つことを示せ.
+
+\end{flushleft}
+ 
+\end{document}
